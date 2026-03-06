@@ -1,0 +1,19 @@
+{
+    "Stock Management": "Stock Management",
+    "Dashboard": "Dashboard",
+    "Stocks": "Stocks",
+    "Dealers": "Dealers",
+    "Profile": "Profile",
+    "Log Out": "Log Out",
+    "Add Stock": "Add Stock",
+    "Update Stock": "Update Stock",
+    "Name": "Name",
+    "Description": "Description",
+    "Quantity": "Quantity",
+    "Price (LKR)": "Price (LKR)",
+    "Unit": "Unit",
+    "Actions": "Actions",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "You're logged in!": "You're logged in!"
+}
