@@ -70,7 +70,14 @@ class DealerManagement extends Component
 
     public function delete($id)
     {
-        Dealer::findOrFail($id)->delete();
+        $dealer = Dealer::findOrFail($id);
+        
+        if ($dealer->invoices()->whereNull('invoices.deleted_at')->exists()) {
+        session()->flash('error', 'Cannot delete this dealer — it is used in one or more active invoices.');
+        return;
+        }
+
+        $dealer->delete();
         Session::flash('message', 'Dealer deleted successfully.');
         $this->loadDealers();
     }

@@ -72,7 +72,15 @@ class StockManagement extends Component
 
     public function delete($id)
     {
-        Stock::findOrFail($id)->delete();
+        $stock = Stock::findOrFail($id);
+        
+        if ($stock->invoices()->whereNull('invoices.deleted_at')->exists()) {
+        session()->flash('error', 'Cannot delete this stock — it is used in one or more active invoices.');
+        return;
+        }
+
+        $stock->delete();
+
         session()->flash('message', 'Stock deleted!');
         $this->loadStocks();
     }

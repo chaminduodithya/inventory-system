@@ -37,6 +37,17 @@ class Invoice extends Model
         return $this->hasMany(Payment::class);
     }
 
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function stocks()
+    {
+        return $this->belongsToMany(Stock::class, 'invoice_items')
+            ->withPivot('quantity_sold', 'unit_price', 'subtotal');
+    }
+
     /**
      * Calculated attribute: total amount paid so far
      */
