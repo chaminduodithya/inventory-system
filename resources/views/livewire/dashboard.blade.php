@@ -18,7 +18,7 @@
             </div>
             <h3 class="text-indigo-100 text-sm font-medium uppercase tracking-wide">Total Stock Value</h3>
             <p class="text-3xl font-bold mt-2">Rs. {{ number_format($totalStockValue, 2) }}</p>
-            <a href="{{ route('stocks') }}" class="mt-4 inline-flex items-center text-xs font-medium text-white/90 hover:text-white">
+            <a href="{{ route('stocks.list') }}" class="mt-4 inline-flex items-center text-xs font-medium text-white/90 hover:text-white">
                 View Stock <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
             </a>
         </div>
@@ -35,7 +35,7 @@
             @if($lowStockItems->count() > 0)
                 <p class="text-sm text-amber-100/90 mt-1">Below {{ $lowStockThreshold }} units</p>
             @endif
-            <a href="{{ route('stocks') }}" class="mt-4 inline-flex items-center text-xs font-medium text-white/90 hover:text-white">
+            <a href="{{ route('stocks.list') }}" class="mt-4 inline-flex items-center text-xs font-medium text-white/90 hover:text-white">
                 Manage Stock <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
             </a>
         </div>
@@ -49,7 +49,7 @@
             </div>
             <h3 class="text-rose-100 text-sm font-medium uppercase tracking-wide">Total Outstanding</h3>
             <p class="text-3xl font-bold mt-2">Rs. {{ number_format($totalOutstanding, 2) }}</p>
-            <a href="{{ route('invoices') }}" class="mt-4 inline-flex items-center text-xs font-medium text-white/90 hover:text-white">
+            <a href="{{ route('invoices.list') }}" class="mt-4 inline-flex items-center text-xs font-medium text-white/90 hover:text-white">
                 View Invoices <i data-lucide="arrow-right" class="w-4 h-4 ml-1"></i>
             </a>
         </div>
@@ -109,7 +109,7 @@
         <div class="p-6">
             <h2 class="text-xl font-semibold mb-4 flex items-center justify-between">
                 Recent Invoices
-                <a href="{{ route('invoices') }}" class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
+                <a href="{{ route('invoices.list') }}" class="text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1">
                     View All <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
             </h2>

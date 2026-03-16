@@ -6,6 +6,7 @@
     body {
         @apply bg-[#f8fafc] text-[#0f172a] antialiased dark:bg-[#020617] dark:text-slate-200 transition-colors duration-500;
     }
+    [x-cloak] { display: none !important; }
 }
 
 @layer components {
@@ -65,4 +66,27 @@
     .btn-danger {
         @apply inline-flex items-center justify-center px-6 py-2.5 bg-white border border-rose-200 rounded-xl font-semibold text-sm text-rose-600 hover:bg-rose-50 active:bg-rose-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-rose-200 transition-all duration-200 dark:bg-rose-950/20 dark:border-rose-900/30 dark:text-rose-400 dark:hover:bg-rose-900/30 dark:focus:ring-rose-900;
     }
+}
+
+@layer utilities {
+    .animate-wave-slow {
+        animation: wave 18s infinite linear;
+    }
+    .animate-wave-slower {
+        animation: wave 25s infinite linear reverse;
+    }
+    .animate-pulse-slow {
+        animation: pulse 12s infinite ease-in-out;
+    }
+}
+
+@keyframes wave {
+    0% { transform: translateX(0) translateY(0); }
+    50% { transform: translateX(-25%) translateY(15%); }
+    100% { transform: translateX(0) translateY(0); }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
 }

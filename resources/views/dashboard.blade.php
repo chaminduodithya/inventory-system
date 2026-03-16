@@ -14,7 +14,7 @@
                 </div>
                 <h3 class="text-indigo-100 text-sm font-medium">Total Products</h3>
                 <p class="text-2xl font-bold mt-1">Ready to manage</p>
-                <a href="{{ route('stocks') }}" class="mt-4 flex items-center gap-2 text-xs font-semibold text-white/80 hover:text-white transition-colors">
+                <a href="{{ route('stocks.list') }}" class="mt-4 flex items-center gap-2 text-xs font-semibold text-white/80 hover:text-white transition-colors">
                     View Inventory <i data-lucide="arrow-right" class="w-3 h-3"></i>
                 </a>
             </div>
@@ -27,7 +27,7 @@
                 </div>
                 <h3 class="text-slate-500 text-sm font-medium">Active Dealers</h3>
                 <p class="text-2xl font-bold text-slate-900 mt-1">Partners Overview</p>
-                <a href="{{ route('dealers') }}" class="mt-4 flex items-center gap-2 text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
+                <a href="{{ route('dealers.list') }}" class="mt-4 flex items-center gap-2 text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
                     Manage Dealers <i data-lucide="arrow-right" class="w-3 h-3"></i>
                 </a>
             </div>

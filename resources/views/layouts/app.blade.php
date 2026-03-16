@@ -25,7 +25,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased h-full">
+<body class="font-sans antialiased h-full" x-data="{ mobileMenuOpen: false }">
     <div class="flex min-h-screen bg-slate-50/50 dark:bg-[#020617]">
         <!-- Sidebar -->
         <aside
@@ -40,27 +40,86 @@
                 </div>
             </div>
 
+            <!-- Sidebar Navigation -->
+
+            <!--Dashboard-->
             <nav class="flex-1 p-6 space-y-1.5">
                 <a href="{{ route('dashboard') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
                     <i data-lucide="layout-grid" class="w-5 h-5"></i>
                     <span>Dashboard</span>
                 </a>
-                <a href="{{ route('stocks') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('stocks') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
-                    <i data-lucide="archive" class="w-5 h-5"></i>
-                    <span>Inventory</span>
-                </a>
-                <a href="{{ route('dealers') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('dealers') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
-                    <i data-lucide="users" class="w-5 h-5"></i>
-                    <span>Dealers</span>
-                </a>
-                <a href="{{ route('invoices') }}"
-                    class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('invoices') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
-                    <i data-lucide="file-text" class="w-5 h-5"></i>
-                    <span>Invoices</span>
-                </a>
+
+                <!--Inventory-->
+                <div x-data="{ inventoryOpen: {{ request()->routeIs('stocks.*') ? 'true' : 'false' }} }">
+                    <button @click="inventoryOpen = !inventoryOpen"
+                        class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('stocks.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="archive" class="w-5 h-5"></i>
+                            <span>Inventory</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"
+                            :class="inventoryOpen ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="inventoryOpen" x-collapse class="mt-1 ml-6 space-y-1">
+                        <a href="{{ route('stocks.add') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('stocks.add') || request()->routeIs('stocks.edit') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                            <i data-lucide="circle-plus" class="w-4 h-4 flex-shrink-0"></i> <span>Add Stock</span>
+                        </a>
+                        <a href="{{ route('stocks.list') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('stocks.list') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                            <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> <span>View All</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!--Dealers-->
+                <div x-data="{ dealersOpen: {{ request()->routeIs('dealers.*') ? 'true' : 'false' }} }">
+                    <button @click="dealersOpen = !dealersOpen"
+                        class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('dealers.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="users" class="w-5 h-5"></i>
+                            <span>Dealers</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"
+                            :class="dealersOpen ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="dealersOpen" x-collapse class="mt-1 ml-8 space-y-1">
+                        <a href="{{ route('dealers.add') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('dealers.add') || request()->routeIs('dealers.edit') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                            <i data-lucide="circle-plus" class="w-4 h-4 flex-shrink-0"></i> Add Dealer
+                        </a>
+                        <a href="{{ route('dealers.list') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('dealers.list') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                            <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> View All
+                        </a>
+                    </div>
+                </div>
+
+                <!--Invoices-->
+                <div x-data="{ invoicesOpen: {{ request()->routeIs('invoices.*') || request()->routeIs('invoice.*') ? 'true' : 'false' }} }">
+                    <button @click="invoicesOpen = !invoicesOpen"
+                        class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('invoices.*') || request()->routeIs('invoice.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                        <div class="flex items-center gap-3">
+                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                            <span>Invoices</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"
+                            :class="invoicesOpen ? 'rotate-180' : ''"></i>
+                    </button>
+                    <div x-show="invoicesOpen" x-collapse class="mt-1 ml-8 space-y-1">
+                        <a href="{{ route('invoices.add') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('invoices.add') || request()->routeIs('invoices.edit') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                            <i data-lucide="circle-plus" class="w-4 h-4 flex-shrink-0"></i> Create Invoice
+                        </a>
+                        <a href="{{ route('invoices.list') }}"
+                            class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('invoices.list') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                            <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> View All
+                        </a>
+                    </div>
+                </div>
+
+                <!--Summary-->
                 <a href="{{ route('summary') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('summary') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
                     <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
@@ -70,16 +129,14 @@
 
             <!-- Bottom Section: Profile & Theme Toggle -->
             <div class="p-6 border-t border-slate-100 dark:border-slate-800/60 space-y-4">
-                <button id="theme-toggle-btn"
-                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border border-transparent dark:border-slate-800/60">
+                <button class="theme-toggle-btn w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border border-transparent dark:border-slate-800/60">
                     <div class="flex items-center gap-3">
                         <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
                         <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
                         <span class="text-sm font-medium">Appearance</span>
                     </div>
                     <div class="w-9 h-5 bg-slate-200 dark:bg-slate-700 rounded-full relative transition-colors">
-                        <div id="theme-toggle-dot"
-                            class="absolute w-3.5 h-3.5 bg-white rounded-full top-0.5 left-0.5 transition-all duration-300">
+                        <div class="theme-toggle-dot absolute w-3.5 h-3.5 bg-white rounded-full top-0.5 left-0.5 transition-all duration-300">
                         </div>
                     </div>
                 </button>
@@ -107,18 +164,173 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col min-w-0">
             <!-- Mobile Navigation Bar -->
+            <!-- Mobile Header -->
             <nav
-                class="lg:hidden bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between dark:bg-[#0f172a] dark:border-slate-800/60">
-                <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center">
+                class="lg:hidden bg-white dark:bg-[#0f172a] border-b border-slate-200 dark:border-slate-800/60 px-6 py-4 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md">
                         <i data-lucide="package" class="text-white w-5 h-5"></i>
                     </div>
-                    <span class="font-bold text-lg text-slate-900 dark:text-white">StockPro</span>
+                    <span class="font-bold text-xl text-slate-900 dark:text-white tracking-tight">StockPro</span>
                 </div>
-                <button class="p-2 text-slate-500 hover:bg-slate-50 rounded-lg">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
+
+                <button @click="mobileMenuOpen = true"
+                    class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors">
+                    <i data-lucide="menu" class="w-7 h-7"></i>
                 </button>
             </nav>
+
+            <!-- Mobile Sidebar / Drawer -->
+            <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" x-cloak
+                class="fixed inset-0 z-50 lg:hidden" x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0">
+                <!-- Backdrop -->
+                <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="mobileMenuOpen = false"></div>
+
+                <!-- Sidebar -->
+                <aside x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false"
+                    x-transition:enter="transform transition ease-out duration-300"
+                    x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
+                    x-transition:leave="transform transition ease-in duration-200"
+                    x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
+                    class="absolute inset-y-0 left-0 w-80 bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-slate-800/60 shadow-2xl overflow-y-auto">
+
+                    <!-- Mobile Header inside sidebar -->
+                    <div
+                        class="p-6 border-b border-slate-200 dark:border-slate-800/60 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
+                                <i data-lucide="package" class="text-white w-6 h-6"></i>
+                            </div>
+                            <span class="font-bold text-xl text-slate-900 dark:text-white">StockPro</span>
+                        </div>
+                        <button @click="mobileMenuOpen = false"
+                            class="p-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
+                            <i data-lucide="x" class="w-6 h-6"></i>
+                        </button>
+                    </div>
+
+                    <!-- Mobile Nav Links (copy your desktop nav here) -->
+                    <nav class="p-6 space-y-2 flex-1">
+                        <a href="{{ route('dashboard') }}"
+                            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('dashboard') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                            <i data-lucide="layout-grid" class="w-5 h-5"></i>
+                            <span>Dashboard</span>
+                        </a>
+
+                        <!--Inventory-->
+                        <div x-data="{ inventoryOpen: {{ request()->routeIs('stocks.*') ? 'true' : 'false' }} }">
+                            <button @click="inventoryOpen = !inventoryOpen"
+                                class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('stocks.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="archive" class="w-5 h-5"></i>
+                                    <span>Inventory</span>
+                                </div>
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"
+                                    :class="inventoryOpen ? 'rotate-180' : ''"></i>
+                            </button>
+                            <div x-show="inventoryOpen" x-collapse class="mt-1 ml-6 space-y-1">
+                                <a href="{{ route('stocks.add') }}"
+                                    class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('stocks.add') || request()->routeIs('stocks.edit') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                                    <i data-lucide="circle-plus" class="w-4 h-4 flex-shrink-0"></i> <span>Add Stock</span>
+                                </a>
+                                <a href="{{ route('stocks.list') }}"
+                                    class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('stocks.list') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                                    <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> <span>View All</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!--Dealers-->
+                        <div x-data="{ dealersOpen: {{ request()->routeIs('dealers.*') ? 'true' : 'false' }} }">
+                            <button @click="dealersOpen = !dealersOpen"
+                                class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('dealers.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="users" class="w-5 h-5"></i>
+                                    <span>Dealers</span>
+                                </div>
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"
+                                    :class="dealersOpen ? 'rotate-180' : ''"></i>
+                            </button>
+                            <div x-show="dealersOpen" x-collapse class="mt-1 ml-8 space-y-1">
+                                <a href="{{ route('dealers.add') }}"
+                                    class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('dealers.add') || request()->routeIs('dealers.edit') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                                    <i data-lucide="circle-plus" class="w-4 h-4 flex-shrink-0"></i> Add Dealer
+                                </a>
+                                <a href="{{ route('dealers.list') }}"
+                                    class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('dealers.list') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                                    <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> View All
+                                </a>
+                            </div>
+                        </div>
+
+                        <!--Invoices-->
+                        <div x-data="{ invoicesOpen: {{ request()->routeIs('invoices.*') || request()->routeIs('invoice.*') ? 'true' : 'false' }} }">
+                            <button @click="invoicesOpen = !invoicesOpen"
+                                class="w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('invoices.*') || request()->routeIs('invoice.*') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                                <div class="flex items-center gap-3">
+                                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                                    <span>Invoices</span>
+                                </div>
+                                <i data-lucide="chevron-down" class="w-4 h-4 transition-transform"
+                                    :class="invoicesOpen ? 'rotate-180' : ''"></i>
+                            </button>
+                            <div x-show="invoicesOpen" x-collapse class="mt-1 ml-8 space-y-1">
+                                <a href="{{ route('invoices.add') }}"
+                                    class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('invoices.add') || request()->routeIs('invoices.edit') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                                    <i data-lucide="circle-plus" class="w-4 h-4 flex-shrink-0"></i> Create Invoice
+                                </a>
+                                <a href="{{ route('invoices.list') }}"
+                                    class="flex items-center gap-3 px-4 py-2 text-sm rounded-lg transition-all {{ request()->routeIs('invoices.list') ? 'text-indigo-700 bg-indigo-50/50 font-medium dark:text-indigo-400 dark:bg-indigo-500/5' : 'text-slate-500 hover:text-slate-900 hover:bg-slate-50 dark:text-slate-400 dark:hover:text-slate-200 dark:hover:bg-slate-800/30' }}">
+                                    <i data-lucide="list" class="w-4 h-4 flex-shrink-0"></i> View All
+                                </a>
+                            </div>
+                        </div>
+
+                        <!--Summary-->
+                        <a href="{{ route('summary') }}"
+                            class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 {{ request()->routeIs('summary') ? 'bg-indigo-50 text-indigo-700 shadow-sm font-semibold dark:bg-indigo-500/10 dark:text-indigo-400' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200' }}">
+                            <i data-lucide="bar-chart-3" class="w-5 h-5"></i>
+                            <span>Summary</span>
+                        </a>
+                    </nav>
+
+                    <!-- Bottom: Theme Toggle + Profile -->
+                    <div class="p-6 border-t border-slate-200 dark:border-slate-800/60 space-y-4">
+                        <button class="theme-toggle-btn w-full flex items-center justify-between px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800/40 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all border border-transparent dark:border-slate-800/60">
+                            <div class="flex items-center gap-3">
+                                <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+                                <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+                                <span class="text-sm font-medium">Appearance</span>
+                            </div>
+                            <div class="w-9 h-5 bg-slate-200 dark:bg-slate-700 rounded-full relative transition-colors">
+                                <div class="theme-toggle-dot absolute w-3.5 h-3.5 bg-white rounded-full top-0.5 left-0.5 transition-all duration-300">
+                                </div>
+                            </div>
+                        </button>
+
+                        <div
+                            class="bg-slate-50 dark:bg-[#1e293b]/40 rounded-2xl p-4 flex items-center gap-3 border border-transparent dark:border-slate-800/40">
+                            <div
+                                class="w-10 h-10 bg-slate-200 dark:bg-indigo-500/20 rounded-lg flex items-center justify-center text-slate-600 dark:text-indigo-400 font-bold">
+                                {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-semibold text-slate-900 dark:text-slate-200 truncate">
+                                    {{ Auth::user()->name ?? 'User' }}</p>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit"
+                                        class="text-xs text-rose-500 hover:text-rose-600 font-medium cursor-pointer">Sign
+                                        Out</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
 
             <main class="flex-1 p-6 lg:p-10 max-w-7xl mx-auto w-full">
                 {{ $slot }}
@@ -134,23 +346,27 @@
         });
 
         // Theme Toggle (vanilla JS — does NOT interfere with Livewire)
-        const toggleBtn = document.getElementById('theme-toggle-btn');
-        const toggleDot = document.getElementById('theme-toggle-dot');
+        const toggleBtns = document.querySelectorAll('.theme-toggle-btn');
+        const toggleDots = document.querySelectorAll('.theme-toggle-dot');
 
         function applyDotPosition() {
-            if (document.documentElement.classList.contains('dark')) {
-                toggleDot.style.transform = 'translateX(1rem)';
-            } else {
-                toggleDot.style.transform = 'translateX(0)';
-            }
+            toggleDots.forEach(dot => {
+                if (document.documentElement.classList.contains('dark')) {
+                    dot.style.transform = 'translateX(1rem)';
+                } else {
+                    dot.style.transform = 'translateX(0)';
+                }
+            });
         }
         applyDotPosition();
 
-        toggleBtn.addEventListener('click', function() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
-            applyDotPosition();
+        toggleBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.documentElement.classList.toggle('dark');
+                const isDark = document.documentElement.classList.contains('dark');
+                localStorage.setItem('color-theme', isDark ? 'dark' : 'light');
+                applyDotPosition();
+            });
         });
     </script>
 </body>

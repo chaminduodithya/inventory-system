@@ -11,21 +11,79 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                <div class="hidden space-x-4 sm:-my-px sm:ms-10 sm:flex sm:items-center">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    <x-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')">
-                        {{ __('Stocks') }}
-                    </x-nav-link>
+                    <!-- Inventory Dropdown -->
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
+                                {{ request()->routeIs('stocks.*') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
+                                <span>{{ __('Inventory') }}</span>
+                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </x-slot>
 
-                    <x-nav-link :href="route('dealers')" :active="request()->routeIs('dealers')">
-                        {{ __('Dealers') }}
-                    </x-nav-link>
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('stocks.add')">
+                                {{ __('Add Stock') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('stocks.list')">
+                                {{ __('View All Stocks') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
 
-                    <x-nav-link :href="route('invoices')" :active="request()->routeIs('invoices')">
-                        {{ __('Invoices') }}
+                    <!-- Dealers Dropdown -->
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
+                                {{ request()->routeIs('dealers.*') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
+                                <span>{{ __('Dealers') }}</span>
+                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('dealers.add')">
+                                {{ __('Add Dealer') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('dealers.list')">
+                                {{ __('View All Dealers') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
+                    <!-- Invoices Dropdown -->
+                    <x-dropdown align="left" width="48">
+                        <x-slot name="trigger">
+                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
+                                {{ request()->routeIs('invoices.*') || request()->routeIs('invoice.*') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
+                                <span>{{ __('Invoices') }}</span>
+                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                </svg>
+                            </button>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('invoices.add')">
+                                {{ __('Create Invoice') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('invoices.list')">
+                                {{ __('View All Invoices') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
+                    <x-nav-link :href="route('summary')" :active="request()->routeIs('summary')">
+                        {{ __('Summary') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -83,8 +141,41 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            <x-responsive-nav-link :href="route('stocks')" :active="request()->routeIs('stocks')">
-                {{ __('Stocks') }}
+            <!-- Inventory Section -->
+            <div class="px-4 pt-3 pb-1">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inventory</div>
+            </div>
+            <x-responsive-nav-link :href="route('stocks.add')" :active="request()->routeIs('stocks.add') || request()->routeIs('stocks.edit')">
+                {{ __('Add Stock') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('stocks.list')" :active="request()->routeIs('stocks.list')">
+                {{ __('View All Stocks') }}
+            </x-responsive-nav-link>
+
+            <!-- Dealers Section -->
+            <div class="px-4 pt-3 pb-1">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Dealers</div>
+            </div>
+            <x-responsive-nav-link :href="route('dealers.add')" :active="request()->routeIs('dealers.add') || request()->routeIs('dealers.edit')">
+                {{ __('Add Dealer') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('dealers.list')" :active="request()->routeIs('dealers.list')">
+                {{ __('View All Dealers') }}
+            </x-responsive-nav-link>
+
+            <!-- Invoices Section -->
+            <div class="px-4 pt-3 pb-1">
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Invoices</div>
+            </div>
+            <x-responsive-nav-link :href="route('invoices.add')" :active="request()->routeIs('invoices.add') || request()->routeIs('invoices.edit')">
+                {{ __('Create Invoice') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('invoices.list')" :active="request()->routeIs('invoices.list')">
+                {{ __('View All Invoices') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="route('summary')" :active="request()->routeIs('summary')">
+                {{ __('Summary') }}
             </x-responsive-nav-link>
         </div>
 
