@@ -20,7 +20,6 @@ class InvoiceList extends Component
     public $payment_amount = 0.00;
     public $payment_date = '';
     public $payment_notes = '';
-    public $invoices;
 
     // Search & Filters
     public $search = '';
@@ -75,17 +74,6 @@ class InvoiceList extends Component
     public function mount()
     {
         $this->payment_date = Carbon::today()->format('Y-m-d');
-        $this->loadInvoices();
-    }
-
-    public function loadInvoices()
-    {
-        $this->invoices = Invoice::with('dealer', 'items.stock', 'payments')
-            ->latest()
-            ->get()
-            ->sortByDesc(function ($invoice) {
-                return $invoice->overdue_level * 10000 + $invoice->days_overdue;
-            });
     }
 
     public function savePayment()
@@ -115,7 +103,7 @@ class InvoiceList extends Component
         Session::flash('message', 'Payment of Rs. ' . number_format($this->payment_amount, 2) . ' recorded successfully.');
 
         $this->selectedInvoiceId = null;
-        $this->loadInvoices();
+        $this->dispatch('refresh-icons');
     }
 
     public function cancelPayment()
@@ -134,7 +122,7 @@ class InvoiceList extends Component
         });
 
         Session::flash('message', 'Invoice deleted and stock restored.');
-        $this->loadInvoices();
+        $this->dispatch('refresh-icons');
     }
 
     public function getUnpaidAmount($invoice)
@@ -163,8 +151,8 @@ class InvoiceList extends Component
                 $q->whereHas('dealer', function ($q) {
                     $q->where('name', 'like', '%' . $this->search . '%');
                 })
-                ->orWhere('notes', 'like', '%' . $this->search . '%')
-                ->orWhere('total_amount', 'like', '%' . $this->search . '%');
+                    ->orWhere('notes', 'like', '%' . $this->search . '%')
+                    ->orWhere('total_amount', 'like', '%' . $this->search . '%');
             });
         }
 
@@ -186,20 +174,20 @@ class InvoiceList extends Component
             $query->where(function ($q) {
                 $q->whereHas('payments', function ($q) {
                     $q->select(DB::raw('SUM(amount) as paid'))
-                      ->havingRaw('paid < invoices.total_amount');
+                        ->havingRaw('paid < invoices.total_amount');
                 }, '=', 0);
 
                 if ($this->status === 'unpaid') {
                     $q->whereDoesntHave('payments');
                 } elseif ($this->status === 'partial') {
                     $q->whereHas('payments')
-                      ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount')
-                      ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) > 0');
+                        ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount')
+                        ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) > 0');
                 } elseif ($this->status === 'paid') {
                     $q->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) >= invoices.total_amount');
                 } elseif ($this->status === 'overdue') {
                     $q->where('due_date', '<', now())
-                      ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount');
+                        ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount');
                 }
             });
         }

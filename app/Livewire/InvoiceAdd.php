@@ -10,6 +10,8 @@ use App\Models\Stock;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Models\StockLog;
+use Illuminate\Support\Facades\Auth;
 
 class InvoiceAdd extends Component
 {
@@ -142,6 +144,17 @@ class InvoiceAdd extends Component
                     'subtotal'      => $subtotal,
                 ]);
 
+                // Create Log
+                StockLog::create([
+                    'stock_id' => $itemData['stock_id'],
+                    'user_id' => Auth::id(),
+                    'quantity_change' => -$itemData['quantity_sold'],
+                    'previous_quantity' => $stock->quantity + $itemData['quantity_sold'], // Since we decremented
+                    'new_quantity' => $stock->quantity,
+                    'type' => 'invoice_sale',
+                    'reason' => "Invoice #SKP-ORD-" . str_pad($invoice->id, 5, '0', STR_PAD_LEFT),
+                ]);
+
                 // Deduct from stock
                 $stock->decrement('quantity', $itemData['quantity_sold']);
             }
@@ -149,6 +162,7 @@ class InvoiceAdd extends Component
             Session::flash('message', $this->editingId ? 'Invoice updated successfully.' : 'Invoice created successfully.');
             $this->resetForm();
             $this->loadStocks();
+            $this->dispatch('refresh-notifications');
         });
     }
 

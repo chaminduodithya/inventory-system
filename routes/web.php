@@ -3,6 +3,7 @@
 use App\Livewire\Dashboard;
 use App\Livewire\StockAdd;
 use App\Livewire\StockList;
+use App\Livewire\StockDetail;
 use App\Livewire\DealerAdd;
 use App\Livewire\DealerList;
 use App\Http\Controllers\ProfileController;
@@ -22,6 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/stocks', StockList::class)->name('stocks.list');
     Route::get('/stocks/add', StockAdd::class)->name('stocks.add');
     Route::get('/stocks/{id}/edit', StockAdd::class)->name('stocks.edit');
+    Route::get('/stocks/{id}/detail', StockDetail::class)->name('stocks.detail');
 
     // Dealers
     Route::get('/dealers', DealerList::class)->name('dealers.list');
@@ -37,4 +39,4 @@ Route::middleware('auth')->group(function () {
     Route::get('/summary', SummaryReport::class)->name('summary');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

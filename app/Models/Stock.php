@@ -8,11 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class Stock extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name', 'description', 'quantity', 'price', 'unit'];
+    protected $fillable = ['name', 'description', 'quantity', 'min_stock_level', 'price', 'unit'];
 
     public function invoices()
     {
         return $this->belongsToMany(Invoice::class, 'invoice_items')
             ->withPivot('quantity_sold', 'unit_price', 'subtotal');
+    }
+
+    public function logs()
+    {
+        return $this->hasMany(StockLog::class)->latest();
     }
 }

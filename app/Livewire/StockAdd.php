@@ -8,12 +8,13 @@ use App\Models\Stock;
 
 class StockAdd extends Component
 {
-    public $name = '', $description = '', $quantity = 0, $price = 0.00, $unit = '';
+    public $name = '', $description = '', $quantity = 0, $min_stock_level = 5, $price = 0.00, $unit = '';
     public $editingId = null;
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'quantity' => 'required|integer|min:0',
+        'min_stock_level' => 'required|integer|min:0',
         'price' => 'required|numeric|min:0',
     ];
 
@@ -34,6 +35,7 @@ class StockAdd extends Component
                 'name' => $this->name,
                 'description' => $this->description,
                 'quantity' => $this->quantity,
+                'min_stock_level' => $this->min_stock_level,
                 'price' => $this->price,
                 'unit' => $this->unit,
             ]);
@@ -43,6 +45,7 @@ class StockAdd extends Component
                 'name' => $this->name,
                 'description' => $this->description,
                 'quantity' => $this->quantity,
+                'min_stock_level' => $this->min_stock_level,
                 'price' => $this->price,
                 'unit' => $this->unit,
             ]);
@@ -60,6 +63,7 @@ class StockAdd extends Component
             $this->name = $stock->name;
             $this->description = $stock->description;
             $this->quantity = $stock->quantity;
+            $this->min_stock_level = $stock->min_stock_level;
             $this->price = $stock->price;
             $this->unit = $stock->unit;
         }
@@ -69,6 +73,7 @@ class StockAdd extends Component
     {
         $this->name = $this->description = $this->unit = '';
         $this->quantity = 0;
+        $this->min_stock_level = 5;
         $this->price = 0.00;
         $this->editingId = null;
     }

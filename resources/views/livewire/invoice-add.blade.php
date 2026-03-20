@@ -1,117 +1,156 @@
-<div class="space-y-6">
+<div class="space-y-6 animate-in-fade">
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $editingId ? __('Update Invoice') : __('Create New Invoice') }}</h1>
-            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Fill in the details below to {{ $editingId ? 'update the' : 'create a new' }} invoice.</p>
+            <h1 class="text-2xl font-bold text-zinc-900 tracking-tight dark:text-white">
+                {{ $editingId ? __('Update Transaction') : __('New Ledger Entry') }}</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Specify transaction details and line items for the
+                ledger.</p>
         </div>
-        <a href="{{ route('invoices.list') }}" class="btn-secondary gap-2">
+        <a href="{{ route('invoices.list') }}" class="saas-btn-secondary gap-2">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            Back to Invoices
+            Back to Registry
         </a>
     </div>
 
     <div class="max-w-4xl">
-        <div class="inventory-card">
-            <div class="p-6">
+        <div class="saas-card">
+            <div class="p-8">
                 @if (session()->has('message'))
-                    <div class="mb-4 p-4 bg-emerald-50 border border-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800/40 dark:text-emerald-300 text-sm rounded-xl flex items-center gap-2">
+                    <div
+                        class="mb-6 p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs font-bold rounded-lg flex items-center gap-2">
                         <i data-lucide="check-circle" class="w-4 h-4"></i>
                         {{ session('message') }}
                     </div>
                 @endif
 
-                <form wire:submit.prevent="save" class="space-y-6">
+                <form wire:submit.prevent="save" class="space-y-8">
                     <!-- Dealer -->
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Dealer *</label>
-                        <select wire:model="dealer_id" class="input-field">
-                            <option value="">-- Select Dealer --</option>
-                            @foreach (\App\Models\Dealer::orderBy('name')->get() as $dealer)
-                                <option value="{{ $dealer->id }}">{{ $dealer->name }}</option>
-                            @endforeach
-                        </select>
-                        @error('dealer_id') <span class="text-rose-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                    <div class="space-y-1.5">
+                        <label class="text-detail">Primary Entity / Dealer</label>
+                        <div class="relative">
+                            <i data-lucide="user"
+                                class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400"></i>
+                            <select wire:model="dealer_id" class="saas-input pl-9">
+                                <option value="">-- Resolve Entity --</option>
+                                @foreach (\App\Models\Dealer::orderBy('name')->get() as $dealer)
+                                    <option value="{{ $dealer->id }}">{{ $dealer->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @error('dealer_id')
+                            <span class="text-rose-500 text-[10px] font-bold block">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <!-- Items -->
-                    <div class="border-t border-slate-200 dark:border-slate-700 pt-6">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-lg font-semibold text-slate-800 dark:text-slate-200">Invoice Items</h3>
-                            <button type="button" wire:click="addItemRow" class="btn-primary px-4 py-2 text-sm gap-2">
-                                <i data-lucide="plus" class="w-4 h-4"></i> Add Item
+                    <div class="border-t border-zinc-100 dark:border-zinc-800 pt-8 mt-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="flex items-center gap-2">
+                                <div class="w-1.5 h-4 bg-brand-500 rounded-full"></div>
+                                <h3
+                                    class="text-sm font-bold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
+                                    Line Item manifest</h3>
+                            </div>
+                            <button type="button" wire:click="addItemRow"
+                                class="text-xs font-bold text-brand-600 hover:text-brand-700 flex items-center gap-1.5 transition-all">
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i> Append Item
                             </button>
                         </div>
 
-                        @foreach ($items as $index => $item)
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 p-4 bg-slate-50 dark:bg-slate-800/40 rounded-xl">
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Product *</label>
-                                    <select wire:model="items.{{ $index }}.stock_id" class="input-field">
-                                        <option value="">-- Select Product --</option>
-                                        @foreach ($availableStocks as $stock)
-                                            <option value="{{ $stock->id }}" {{ $item['stock_id'] == $stock->id ? 'selected' : '' }}>
-                                                {{ $stock->name }} (Stock: {{ $stock->quantity }} {{ $stock->unit ?? 'units' }})
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error("items.$index.stock_id") <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
-                                </div>
+                        <div class="space-y-3">
+                            @foreach ($items as $index => $item)
+                                <div
+                                    class="grid grid-cols-1 md:grid-cols-12 gap-3 p-3 bg-zinc-50/50 dark:bg-zinc-900/50 rounded-lg border border-zinc-100 dark:border-zinc-800/50 relative group">
+                                    <div class="md:col-span-8 space-y-1">
+                                        <label class="text-[9px] font-bold uppercase text-zinc-400">SKU / Product
+                                            Selection</label>
+                                        <select wire:model.live="items.{{ $index }}.stock_id" class="saas-input">
+                                            <option value="">-- Resolve SKU --</option>
+                                            @foreach ($availableStocks as $stock)
+                                                <option value="{{ $stock->id }}">{{ $stock->name }} (Available:
+                                                    {{ $stock->quantity }})</option>
+                                            @endforeach
+                                        </select>
+                                        @error("items.$index.stock_id")
+                                            <span class="text-rose-500 text-[9px] font-bold">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
-                                <div>
-                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Quantity Sold *</label>
-                                    <input wire:model="items.{{ $index }}.quantity_sold" type="number" min="1" class="input-field">
-                                    @error("items.$index.quantity_sold") <span class="text-rose-500 text-xs">{{ $message }}</span> @enderror
-                                </div>
+                                    <div class="md:col-span-3 space-y-1">
+                                        <label class="text-[9px] font-bold uppercase text-zinc-400">Inventory
+                                            qty</label>
+                                        <input wire:model.live="items.{{ $index }}.quantity_sold" type="number"
+                                            min="1" class="saas-input font-mono">
+                                        @error("items.$index.quantity_sold")
+                                            <span class="text-rose-500 text-[9px] font-bold">{{ $message }}</span>
+                                        @enderror
+                                    </div>
 
-                                <div class="md:col-span-2 flex items-end">
-                                    <button type="button" wire:click="removeItemRow({{ $index }})" class="text-rose-600 hover:text-rose-800 text-sm font-medium">
-                                        Remove
-                                    </button>
+                                    <div class="md:col-span-1 flex items-end justify-center pb-2">
+                                        <button type="button" wire:click="removeItemRow({{ $index }})"
+                                            class="p-1.5 text-zinc-300 hover:text-rose-500 transition-colors">
+                                            <i data-lucide="x" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
 
                         @if (empty($items))
-                            <p class="text-slate-500 dark:text-slate-400 text-center py-4">Add at least one item to create invoice</p>
+                            <div
+                                class="py-12 border-2 border-dashed border-zinc-100 dark:border-zinc-800 rounded-xl text-center">
+                                <p class="text-xs text-zinc-400 italic">Manifest empty. Please add items to initialize
+                                    transaction.</p>
+                            </div>
                         @endif
                     </div>
 
                     <!-- Dates & Notes -->
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Issue Date *</label>
-                            <input wire:model="issue_date" type="date" class="input-field">
-                            @error('issue_date') <span class="text-rose-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                        <div class="space-y-1.5">
+                            <label class="text-detail">Execution Date</label>
+                            <input wire:model="issue_date" type="date" class="saas-input">
+                            @error('issue_date')
+                                <span class="text-rose-500 text-[10px] font-bold block">{{ $message }}</span>
+                            @enderror
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Due Date</label>
-                            <input wire:model="due_date" type="date" class="input-field">
-                            @error('due_date') <span class="text-rose-500 text-xs mt-1 block">{{ $message }}</span> @enderror
+                        <div class="space-y-1.5">
+                            <label class="text-detail">Requirement Deadline (Due Date)</label>
+                            <input wire:model="due_date" type="date" class="saas-input">
+                            @error('due_date')
+                                <span class="text-rose-500 text-[10px] font-bold block">{{ $message }}</span>
+                            @enderror
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Notes</label>
-                        <textarea wire:model="notes" rows="3" placeholder="Payment terms, items summary..." class="input-field resize-none"></textarea>
+                    <div class="space-y-1.5">
+                        <label class="text-detail">Transaction Notes / Context</label>
+                        <textarea wire:model="notes" rows="3" placeholder="Specify terms, reference numbers..."
+                            class="saas-input resize-none"></textarea>
                     </div>
 
                     <!-- Grand Total & Submit -->
-                    <div class="pt-4 border-t border-slate-200 dark:border-slate-700">
-                        <div class="text-right text-xl font-bold">
-                            Grand Total: Rs. {{ number_format($this->calculateTotal(), 2) }}
+                    <div
+                        class="pt-8 border-t border-zinc-100 dark:border-zinc-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                        <div class="space-y-1">
+                            <p class="text-detail">Aggregate Valuation</p>
+                            <div class="text-3xl font-bold text-zinc-900 dark:text-zinc-100 font-mono tracking-tighter">
+                                <span class="text-sm text-zinc-400 font-medium">Rs.</span>
+                                {{ number_format($this->calculateTotal(), 2) }}
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="pt-2 flex flex-col gap-2">
-                        <button type="submit" class="btn-primary w-full gap-2" {{ empty($items) ? 'disabled' : '' }}>
-                            <i data-lucide="{{ $editingId ? 'save' : 'file-plus' }}" class="w-4 h-4"></i>
-                            {{ $editingId ? __('Update Invoice') : __('Create Invoice') }}
-                        </button>
-                        @if ($editingId)
-                            <button type="button" wire:click="resetForm" class="btn-secondary w-full">
-                                {{ __('Cancel') }}
+                        <div class="flex gap-3">
+                            @if ($editingId)
+                                <button type="button" wire:click="resetForm"
+                                    class="saas-btn-secondary px-8">Discard</button>
+                            @endif
+                            <button type="submit" class="saas-btn-primary px-12 py-4"
+                                {{ empty($items) ? 'disabled' : '' }}>
+                                <i data-lucide="shield-check" class="w-4 h-4 mr-2"></i>
+                                {{ $editingId ? __('Commit Changes') : __('Authorize Transaction') }}
                             </button>
-                        @endif
+                        </div>
                     </div>
                 </form>
             </div>
@@ -119,7 +158,5 @@
     </div>
 </div>
 
-<script>
-    document.addEventListener('livewire:initialized', () => { lucide.createIcons(); });
-    document.addEventListener('livewire:navigated', () => { lucide.createIcons(); });
-</script>
+
+

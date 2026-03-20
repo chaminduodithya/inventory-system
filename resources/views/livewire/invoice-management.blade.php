@@ -372,8 +372,5 @@
         </div>
     </div>
 
-    <script>
-        document.addEventListener('livewire:initialized', () => { lucide.createIcons(); });
-        document.addEventListener('livewire:navigated', () => { lucide.createIcons(); });
-    </script>
+    
 </div>
