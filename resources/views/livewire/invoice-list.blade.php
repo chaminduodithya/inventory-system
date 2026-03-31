@@ -2,13 +2,13 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-zinc-900 tracking-tight dark:text-white">
-                {{ __('Invoice General Ledger') }}</h1>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">High-density overview of all customer and supplier
-                transactions.</p>
+                {{ __('Bills') }}</h1>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">See all your bills, payments, and overdue accounts.
+            </p>
         </div>
         <a href="{{ route('invoices.add') }}" class="saas-btn-primary gap-2">
             <i data-lucide="plus-circle" class="w-4 h-4"></i>
-            Create New Invoice
+            Add New Bill
         </a>
     </div>
 
@@ -18,7 +18,7 @@
             <div>
                 <p class="text-detail">Total Outstanding</p>
                 <h3 class="text-xl font-bold text-zinc-900 dark:text-white mt-1">Rs.
-                    {{ number_format($invoices->sum('unpaid_amount'), 2) }}</h3>
+                    {{ number_format($totalOutstanding, 2) }}</h3>
             </div>
             <div class="w-10 h-10 rounded-lg bg-rose-500/10 flex items-center justify-center text-rose-600">
                 <i data-lucide="trending-up" class="w-5 h-5"></i>
@@ -26,9 +26,9 @@
         </div>
         <div class="saas-card p-4 flex items-center justify-between">
             <div>
-                <p class="text-detail">Total Collected</p>
+                <p class="text-detail">Total Paid</p>
                 <h3 class="text-xl font-bold text-zinc-900 dark:text-white mt-1">Rs.
-                    {{ number_format($invoices->sum('paid_amount'), 2) }}</h3>
+                    {{ number_format($totalCollected, 2) }}</h3>
             </div>
             <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-emerald-600">
                 <i data-lucide="check-check" class="w-5 h-5"></i>
@@ -36,8 +36,8 @@
         </div>
         <div class="saas-card p-4 flex items-center justify-between">
             <div>
-                <p class="text-detail">Active Ledger items</p>
-                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mt-1">{{ $invoices->count() }}</h3>
+                <p class="text-detail">Total Bills</p>
+                <h3 class="text-xl font-bold text-zinc-900 dark:text-white mt-1">{{ $activeLedgerCount }}</h3>
             </div>
             <div class="w-10 h-10 rounded-lg bg-brand-500/10 flex items-center justify-center text-brand-600">
                 <i data-lucide="layers" class="w-5 h-5"></i>
@@ -68,9 +68,9 @@
 
             <!-- Dealer -->
             <div class="space-y-1.5">
-                <label class="text-detail">Entity / Dealer</label>
+                <label class="text-detail">Partner</label>
                 <select wire:model.live="dealerId" class="saas-input">
-                    <option value="">All Entities</option>
+                    <option value="">All Partners</option>
                     @foreach ($dealers as $dealer)
                         <option value="{{ $dealer->id }}">{{ $dealer->name }}</option>
                     @endforeach
@@ -79,24 +79,24 @@
 
             <!-- Status -->
             <div class="space-y-1.5">
-                <label class="text-detail">Ledger Status</label>
+                <label class="text-detail">Status</label>
                 <select wire:model.live="status" class="saas-input">
-                    <option value="all">Total View</option>
-                    <option value="unpaid">Unpaid Only</option>
-                    <option value="partial">Partial Payment</option>
-                    <option value="paid">Settled</option>
-                    <option value="overdue">Overdue Alerts</option>
+                    <option value="all">Show all</option>
+                    <option value="unpaid">Unpaid</option>
+                    <option value="partial">Partially Paid</option>
+                    <option value="paid">Paid in full</option>
+                    <option value="overdue">Late bills</option>
                 </select>
             </div>
 
             <!-- Date Range -->
             <div class="grid grid-cols-2 gap-2">
                 <div class="space-y-1.5">
-                    <label class="text-detail">Interval From</label>
+                    <label class="text-detail">From</label>
                     <input wire:model.live="dateFrom" type="date" class="saas-input">
                 </div>
                 <div class="space-y-1.5">
-                    <label class="text-detail">Interval To</label>
+                    <label class="text-detail">To</label>
                     <input wire:model.live="dateTo" type="date" class="saas-input">
                 </div>
             </div>
@@ -109,7 +109,7 @@
             <button wire:click="clearFilters"
                 class="text-xs text-zinc-500 hover:text-brand-600 transition-colors flex items-center gap-1.5 font-medium">
                 <i data-lucide="refresh-cw" class="w-3 h-3"></i>
-                Reset Context
+                Clear filters
             </button>
         </div>
     </div>
@@ -120,11 +120,11 @@
             <table class="data-grid">
                 <thead class="bg-zinc-50/50 dark:bg-zinc-900/50">
                     <tr>
-                        <th class="data-grid-header w-1/3">Dealer / Transaction Context</th>
+                        <th class="data-grid-header w-1/3">Partner & Notes</th>
                         <th class="data-grid-header">Total amount</th>
-                        <th class="data-grid-header">Ledger status</th>
+                        <th class="data-grid-header">Status</th>
                         <th class="data-grid-header">Timeline</th>
-                        <th class="data-grid-header text-right">Actions</th>
+                        <th class="data-grid-header text-right">Options</th>
                     </tr>
                 </thead>
                 <tbody x-data="{ openInvoice: null }" class="divide-y divide-zinc-100 dark:divide-zinc-800/50">
@@ -172,7 +172,7 @@
                                 <div class="flex flex-col gap-1.5 items-start">
                                     @if ($invoice->isFullyPaid)
                                         <span class="saas-badge saas-badge-success"><i data-lucide="check"
-                                                class="w-3 h-3"></i> Settled</span>
+                                                class="w-3 h-3"></i> Paid</span>
                                     @elseif($invoice->paid_amount > 0)
                                         <span class="saas-badge saas-badge-warning"><i data-lucide="activity"
                                                 class="w-3 h-3"></i> Partial (Rs.
@@ -185,7 +185,7 @@
                                     @if ($invoice->overdue_level >= 1)
                                         <span
                                             class="text-[10px] font-bold text-rose-600 uppercase flex items-center gap-1">
-                                            <i data-lucide="alert-triangle" class="w-3 h-3"></i> Overdue Line
+                                            <i data-lucide="alert-triangle" class="w-3 h-3"></i> LATE
                                         </span>
                                     @endif
                                 </div>
@@ -195,13 +195,13 @@
                                 <div class="text-[11px] space-y-0.5">
                                     <div class="flex items-center gap-1.5 text-zinc-500">
                                         <i data-lucide="calendar" class="w-3 h-3"></i>
-                                        <span>Issued: {{ $invoice->issue_date->format('d M y') }}</span>
+                                        <span>Date: {{ $invoice->issue_date->format('d M y') }}</span>
                                     </div>
                                     @if ($invoice->due_date)
                                         <div
                                             class="flex items-center gap-1.5 {{ $invoice->days_overdue > 0 ? 'text-rose-500 font-bold' : 'text-zinc-400' }}">
                                             <i data-lucide="flag" class="w-3 h-3"></i>
-                                            <span>Due: {{ $invoice->due_date->format('d M y') }}</span>
+                                            <span>Due date: {{ $invoice->due_date->format('d M y') }}</span>
                                         </div>
                                     @endif
                                 </div>
@@ -222,7 +222,7 @@
                                     @endif
                                     <button wire:click="delete({{ $invoice->id }})"
                                         class="p-1.5 text-zinc-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-all"
-                                        onclick="return confirm('Archive transaction?')">
+                                        onclick="return confirm('Remove this bill?')">
                                         <i data-lucide="trash" class="w-4 h-4"></i>
                                     </button>
                                 </div>
@@ -239,14 +239,14 @@
                                     <div class="space-y-4">
                                         <h4
                                             class="text-xs font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
-                                            <i data-lucide="box" class="w-4 h-4"></i> Line Items
+                                            <i data-lucide="box" class="w-4 h-4"></i> Items
                                         </h4>
                                         <div class="saas-card overflow-hidden border-zinc-100 dark:border-zinc-800">
                                             <table class="w-full text-[12px]">
                                                 <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500">
                                                     <tr>
-                                                        <th class="px-3 py-2 text-left">SKU / Product</th>
-                                                        <th class="px-3 py-2 text-right">Qty</th>
+                                                        <th class="px-3 py-2 text-left">Item</th>
+                                                        <th class="px-3 py-2 text-right">Quantity</th>
                                                         <th class="px-3 py-2 text-right">Subtotal</th>
                                                     </tr>
                                                 </thead>
@@ -272,14 +272,14 @@
                                         <h4
                                             class="text-xs font-bold uppercase tracking-widest text-zinc-400 flex items-center gap-2">
                                             <i data-lucide="credit-card" class="w-4 h-4 text-emerald-500"></i> Payment
-                                            context
+                                            history
                                         </h4>
                                         <div class="saas-card overflow-hidden border-zinc-100 dark:border-zinc-800">
                                             <table class="w-full text-[12px]">
                                                 <thead class="bg-zinc-50 dark:bg-zinc-800/50 text-zinc-500">
                                                     <tr>
                                                         <th class="px-3 py-2 text-left">Date</th>
-                                                        <th class="px-3 py-2 text-right">Credit</th>
+                                                        <th class="px-3 py-2 text-right">Paid</th>
                                                         <th class="px-3 py-2 text-left">Ref</th>
                                                     </tr>
                                                 </thead>
@@ -316,16 +316,17 @@
                                                         class="w-8 h-8 rounded bg-brand-500 text-white flex items-center justify-center">
                                                         <i data-lucide="dollar-sign" class="w-4 h-4"></i>
                                                     </div>
-                                                    Ledger Credit Entry for {{ $invoice->dealer->name }}
+                                                    Add payment for {{ $invoice->dealer->name }}
                                                 </h3>
                                                 <span
-                                                    class="text-xs font-mono px-2 py-1 bg-brand-100 text-brand-700 rounded-full">Balance:
+                                                    class="text-xs font-mono px-2 py-1 bg-brand-100 text-brand-700 rounded-full">Still
+                                                    to pay:
                                                     Rs. {{ number_format($invoice->unpaid_amount, 2) }}</span>
                                             </div>
 
                                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                                 <div class="space-y-1.5">
-                                                    <label class="text-detail">Amount (LKR)</label>
+                                                    <label class="text-detail">Amount</label>
                                                     <div class="relative">
                                                         <span
                                                             class="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-xs">Rs.</span>
@@ -340,7 +341,7 @@
                                                 </div>
 
                                                 <div class="space-y-1.5">
-                                                    <label class="text-detail">Entry Date</label>
+                                                    <label class="text-detail">Date</label>
                                                     <input wire:model="payment_date" type="date"
                                                         class="saas-input">
                                                     @error('payment_date')
@@ -350,17 +351,17 @@
                                                 </div>
 
                                                 <div class="space-y-1.5">
-                                                    <label class="text-detail">Reference / Notes</label>
+                                                    <label class="text-detail">Notes</label>
                                                     <input wire:model="payment_notes" type="text"
-                                                        placeholder="CHQ / Bank Ref..." class="saas-input">
+                                                        placeholder="Add notes..." class="saas-input">
                                                 </div>
                                             </div>
 
                                             <div class="flex gap-3 justify-end pt-4">
                                                 <button type="button" wire:click="cancelPayment"
-                                                    class="saas-btn-secondary">Dismiss</button>
+                                                    class="saas-btn-secondary">Cancel</button>
                                                 <button type="button" wire:click="savePayment"
-                                                    class="saas-btn-primary px-8">Commit Payment</button>
+                                                    class="saas-btn-primary px-8">Save Payment</button>
                                             </div>
                                         </div>
                                     </div>
@@ -375,11 +376,11 @@
                                         class="w-16 h-16 rounded-full bg-zinc-50 dark:bg-zinc-900 flex items-center justify-center text-zinc-300">
                                         <i data-lucide="file-text" class="w-8 h-8"></i>
                                     </div>
-                                    <h3 class="font-bold text-zinc-400">Empty Ledger</h3>
-                                    <p class="text-xs text-zinc-500 max-w-xs">No transactions match your current search
-                                        profile. Try adjusting filters or create a new entry.</p>
-                                    <a href="{{ route('invoices.add') }}" class="saas-btn-secondary mt-2">Initialize
-                                        First Entry</a>
+                                    <h3 class="font-bold text-zinc-400">No bills found</h3>
+                                    <p class="text-xs text-zinc-500 max-w-xs">We couldn't find any bills matching your
+                                        search. Try adjusting filters or add a new bill.</p>
+                                    <a href="{{ route('invoices.add') }}" class="saas-btn-secondary mt-2">Add your
+                                        first bill</a>
                                 </div>
                             </td>
                         </tr>

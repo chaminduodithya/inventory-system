@@ -172,31 +172,35 @@ class InvoiceList extends Component
         // Status filter
         if ($this->status !== 'all') {
             $query->where(function ($q) {
-                $q->whereHas('payments', function ($q) {
-                    $q->select(DB::raw('SUM(amount) as paid'))
-                        ->havingRaw('paid < invoices.total_amount');
-                }, '=', 0);
-
                 if ($this->status === 'unpaid') {
                     $q->whereDoesntHave('payments');
                 } elseif ($this->status === 'partial') {
                     $q->whereHas('payments')
-                        ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount')
-                        ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) > 0');
+                        ->whereRaw('(SELECT COALESCE(SUM(amount), 0) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount');
                 } elseif ($this->status === 'paid') {
-                    $q->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) >= invoices.total_amount');
+                    $q->whereRaw('(SELECT COALESCE(SUM(amount), 0) FROM payments WHERE payments.invoice_id = invoices.id) >= invoices.total_amount');
                 } elseif ($this->status === 'overdue') {
                     $q->where('due_date', '<', now())
-                        ->whereRaw('(SELECT SUM(amount) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount');
+                        ->whereRaw('(SELECT COALESCE(SUM(amount), 0) FROM payments WHERE payments.invoice_id = invoices.id) < invoices.total_amount');
                 }
             });
         }
+
+        // We need total stats for the filtered set BEFORE paginating
+        // Or we can just let the view handle it but paginate breaks sum()
+        $allInvoices = $query->get();
+        $totalOutstanding = $allInvoices->sum('unpaid_amount');
+        $totalCollected = $allInvoices->sum('paid_amount');
+        $activeLedgerCount = $allInvoices->count();
 
         $invoices = $query->paginate(15);
 
         return view('livewire.invoice-list', [
             'invoices' => $invoices,
             'dealers' => Dealer::orderBy('name')->get(),
+            'totalOutstanding' => $totalOutstanding,
+            'totalCollected' => $totalCollected,
+            'activeLedgerCount' => $activeLedgerCount,
         ]);
     }
 }

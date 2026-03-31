@@ -19,8 +19,8 @@
 
         <div
             class="p-4 border-b border-zinc-50 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900 flex justify-between items-center">
-            <h3 class="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">System Alerts</h3>
-            <span class="text-[9px] font-mono text-zinc-400">CORE-MONITOR-V1</span>
+            <h3 class="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">Updates</h3>
+            <span class="text-[9px] font-mono text-zinc-400">System Info</span>
         </div>
 
         <div class="max-h-[320px] overflow-y-auto">
@@ -35,7 +35,7 @@
                         <p
                             class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100 truncate group-hover:text-brand-600 transition-colors">
                             {{ $item->name }}</p>
-                        <p class="text-[10px] text-zinc-500 mt-0.5">Quantity Critical: <span
+                        <p class="text-[10px] text-zinc-500 mt-0.5">Low Stock: <span
                                 class="font-mono font-bold text-rose-500">{{ $item->quantity }}</span> /
                             {{ $item->min_stock_level }}</p>
                     </div>
@@ -46,8 +46,8 @@
                         class="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600 mx-auto mb-4 border border-emerald-500/20">
                         <i data-lucide="check" class="w-6 h-6"></i>
                     </div>
-                    <p class="text-xs font-bold text-zinc-400">Inventory Levels Nominal</p>
-                    <p class="text-[10px] text-zinc-500 mt-1">No SKU replenishment required.</p>
+                    <p class="text-xs font-bold text-zinc-400">Everything looks good</p>
+                    <p class="text-[10px] text-zinc-500 mt-1">No items need reordering right now.</p>
                 </div>
             @endforelse
         </div>
@@ -96,4 +96,3 @@
         }
     </style>
 </div>
-

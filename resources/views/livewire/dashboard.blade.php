@@ -3,15 +3,14 @@
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
             <h1 class="text-3xl font-bold text-zinc-900 dark:text-white tracking-tight">
-                Control Center
+                Dashboard
             </h1>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Operational intelligence for <span
-                    class="font-bold text-brand-600">StockPro</span> Enterprise.</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">How your business is doing today.</p>
         </div>
         <div class="flex items-center gap-3">
             <div
                 class="px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded text-[10px] font-mono font-bold text-zinc-500 border border-zinc-200 dark:border-zinc-700">
-                LATEST REVISION: {{ now()->format('d.m.Y/H:i') }}
+                LAST UPDATED: {{ now()->format('d.m.Y/H:i') }}
             </div>
         </div>
     </div>
@@ -21,7 +20,7 @@
         <!-- Total Stock Value -->
         <div class="saas-card p-5 group hover:border-brand-500/50 transition-all">
             <div class="flex items-center justify-between mb-3">
-                <p class="text-detail">Inventory Valuation</p>
+                <p class="text-detail">Items Total Value</p>
                 <div class="p-2 bg-brand-500/10 rounded text-brand-600">
                     <i data-lucide="database" class="w-4 h-4"></i>
                 </div>
@@ -29,36 +28,34 @@
             <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono tracking-tighter">Rs.
                 {{ number_format($totalStockValue, 2) }}</p>
             <div class="mt-4 pt-4 border-t border-zinc-50 dark:border-zinc-800 flex items-center justify-between">
-                <span class="text-[10px] text-zinc-400 font-medium">GLOBAL ASSETS</span>
+                <span class="text-[10px] text-zinc-400 font-medium">TOTAL VALUE</span>
                 <a href="{{ route('stocks.list') }}"
-                    class="text-[10px] font-bold text-brand-600 flex items-center gap-1">ANALYZE <i
+                    class="text-[10px] font-bold text-brand-600 flex items-center gap-1">SEE ALL <i
                         data-lucide="chevron-right" class="w-3 h-3"></i></a>
             </div>
         </div>
 
         <!-- Low Stock Items -->
         <div class="saas-card p-5 border-l-4 border-l-amber-500">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-detail">Depletion Risks</p>
-                <div class="p-2 bg-amber-500/10 rounded text-amber-600">
-                    <i data-lucide="alert-octagon" class="w-4 h-4"></i>
-                </div>
+            <div class="p-2 bg-amber-500/10 rounded text-amber-600">
+                <i data-lucide="alert-octagon" class="w-4 h-4"></i>
             </div>
+            <p class="text-detail">Low Stock</p>
             <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono tracking-tighter">
                 {{ $lowStockItems->count() }} <span class="text-xs text-zinc-400 font-sans tracking-normal">SKUs</span>
             </p>
             <div class="mt-4 pt-4 border-t border-zinc-50 dark:border-zinc-800 flex items-center justify-between">
-                <span class="text-[10px] text-amber-600 font-bold uppercase">Critical Threshold Reached</span>
+                <span class="text-[10px] text-amber-600 font-bold uppercase">ALMOST EMPTY</span>
                 <a href="{{ route('stocks.list') }}"
-                    class="text-[10px] font-bold text-zinc-400 hover:text-zinc-600 flex items-center gap-1">REPLENISH <i
-                        data-lucide="chevron-right" class="w-3 h-3"></i></a>
+                    class="text-[10px] font-bold text-zinc-400 hover:text-zinc-600 flex items-center gap-1">ORDER MORE
+                    <i data-lucide="chevron-right" class="w-3 h-3"></i></a>
             </div>
         </div>
 
         <!-- Total Outstanding -->
         <div class="saas-card p-5 border-l-4 border-l-rose-500">
             <div class="flex items-center justify-between mb-3">
-                <p class="text-detail">Unsettled Ledger</p>
+                <p class="text-detail">Total still to pay</p>
                 <div class="p-2 bg-rose-500/10 rounded text-rose-600">
                     <i data-lucide="landmark" class="w-4 h-4"></i>
                 </div>
@@ -66,28 +63,26 @@
             <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono tracking-tighter">Rs.
                 {{ number_format($totalOutstanding, 2) }}</p>
             <div class="mt-4 pt-4 border-t border-zinc-50 dark:border-zinc-800 flex items-center justify-between">
-                <span class="text-[10px] text-rose-600 font-bold uppercase">Awaiting Collection</span>
+                <span class="text-[10px] text-rose-600 font-bold uppercase">MONEY OWED</span>
                 <a href="{{ route('invoices.list') }}"
-                    class="text-[10px] font-bold text-zinc-400 hover:text-zinc-600 flex items-center gap-1">COLLECT <i
+                    class="text-[10px] font-bold text-zinc-400 hover:text-zinc-600 flex items-center gap-1">SEE BILLS <i
                         data-lucide="chevron-right" class="w-3 h-3"></i></a>
             </div>
         </div>
 
         <!-- Overdue Dealers -->
         <div class="saas-card p-5">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-detail">Risk Entities</p>
-                <div class="p-2 bg-zinc-500/10 rounded text-zinc-500">
-                    <i data-lucide="users-2" class="w-4 h-4"></i>
-                </div>
+            <div class="p-2 bg-zinc-500/10 rounded text-zinc-500">
+                <i data-lucide="users-2" class="w-4 h-4"></i>
             </div>
+            <p class="text-detail">Late Partners</p>
             <p class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 font-mono tracking-tighter">
                 {{ $overdueDealers->count() }} <span
                     class="text-xs text-zinc-400 font-sans tracking-normal">Dealers</span></p>
             <div class="mt-4 pt-4 border-t border-zinc-50 dark:border-zinc-800 flex items-center justify-between">
-                <span class="text-[10px] text-zinc-400 font-medium">OVERDUE ACCOUNTS</span>
+                <span class="text-[10px] text-zinc-400 font-medium">LATE PAYMENTS</span>
                 <a href="{{ route('summary') }}"
-                    class="text-[10px] font-bold text-zinc-400 hover:text-zinc-600 flex items-center gap-1">REVIEW <i
+                    class="text-[10px] font-bold text-zinc-400 hover:text-zinc-600 flex items-center gap-1">SEE STATS <i
                         data-lucide="chevron-right" class="w-3 h-3"></i></a>
             </div>
         </div>
@@ -98,10 +93,10 @@
         <div class="lg:col-span-2 space-y-4">
             <div class="flex items-center justify-between px-1">
                 <h2 class="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                    <i data-lucide="activity" class="w-4 h-4"></i> Transaction Stream
+                    <i data-lucide="activity" class="w-4 h-4"></i> Recent activities
                 </h2>
                 <a href="{{ route('invoices.list') }}"
-                    class="text-[10px] font-bold text-brand-600 hover:underline flex items-center gap-1">FULL REGISTRY
+                    class="text-[10px] font-bold text-brand-600 hover:underline flex items-center gap-1">SEE ALL
                     <i data-lucide="external-link" class="w-3 h-3"></i></a>
             </div>
 
@@ -110,10 +105,10 @@
                     <table class="data-grid">
                         <thead>
                             <tr class="bg-zinc-50/50 dark:bg-zinc-900/50">
-                                <th class="data-grid-header">Entity / Dealer</th>
-                                <th class="data-grid-header">Valuation</th>
+                                <th class="data-grid-header">Partner</th>
+                                <th class="data-grid-header">Amount</th>
                                 <th class="data-grid-header">Status</th>
-                                <th class="data-grid-header text-right">Commit Date</th>
+                                <th class="data-grid-header text-right">Date</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-zinc-100 dark:divide-zinc-800/50">
@@ -129,9 +124,9 @@
                                         {{ number_format($invoice->total_amount, 2) }}</td>
                                     <td class="data-grid-cell">
                                         @if ($invoice->isFullyPaid)
-                                            <span class="saas-badge saas-badge-success">SETTLED</span>
+                                            <span class="saas-badge saas-badge-success">PAID</span>
                                         @elseif($invoice->paid_amount > 0)
-                                            <span class="saas-badge saas-badge-warning">PARTIAL</span>
+                                            <span class="saas-badge saas-badge-warning">UNPAID</span>
                                         @else
                                             <span class="saas-badge saas-badge-danger">UNPAID</span>
                                         @endif
@@ -145,16 +140,14 @@
                     </table>
                 </div>
                 @if ($recentInvoices->isEmpty())
-                    <div class="py-12 text-center text-zinc-400 text-xs italic">Stream inactive. No recent transactions
-                        detected.</div>
+                    <div class="py-12 text-center text-zinc-400 text-xs italic">No activities yet.</div>
                 @endif
             </div>
         </div>
 
         <!-- Critical Alerts -->
         <div class="lg:col-span-1 space-y-4">
-            <h2 class="text-sm font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2 px-1">
-                <i data-lucide="zap" class="w-4 h-4 text-brand-500"></i> Critical Alerts
+            <i data-lucide="zap" class="w-4 h-4 text-brand-500"></i> Important news
             </h2>
 
             <div class="space-y-3">
@@ -167,21 +160,18 @@
                         <div class="flex-1 min-w-0">
                             <h4 class="text-[12px] font-bold text-zinc-800 dark:text-zinc-200 truncate">
                                 {{ $stock->name }}</h4>
-                            <p class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Critical Stock:
+                            <p class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Running low:
                                 {{ $stock->quantity }} {{ $stock->unit ?? 'u' }} left</p>
                         </div>
                     </div>
                 @empty
                     <div class="saas-card p-8 text-center bg-emerald-500/5 border-emerald-500/20">
                         <i data-lucide="check-circle" class="w-8 h-8 text-emerald-500 mx-auto mb-2 opacity-50"></i>
-                        <p class="text-[10px] font-bold text-emerald-600 uppercase">All systems nominal</p>
-                        <p class="text-[9px] text-zinc-400 mt-1">Stock levels within safe range</p>
+                        <p class="text-[10px] font-bold text-emerald-600 uppercase">Everything is good</p>
+                        <p class="text-[9px] text-zinc-400 mt-1">No items are running low right now.</p>
                     </div>
                 @endforelse
             </div>
         </div>
     </div>
 </div>
-
-
-

@@ -19,21 +19,25 @@
                     <!-- Inventory Dropdown -->
                     <x-dropdown align="left" width="48">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
                                 {{ request()->routeIs('stocks.*') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
-                                <span>{{ __('Inventory') }}</span>
-                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                <span>{{ __('Items') }}</span>
+                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </x-slot>
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('stocks.add')">
-                                {{ __('Add Stock') }}
+                                {{ __('Add Item') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('stocks.list')">
-                                {{ __('View All Stocks') }}
+                                {{ __('All Items') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
@@ -41,21 +45,25 @@
                     <!-- Dealers Dropdown -->
                     <x-dropdown align="left" width="48">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
                                 {{ request()->routeIs('dealers.*') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
-                                <span>{{ __('Dealers') }}</span>
-                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                <span>{{ __('Partners') }}</span>
+                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </x-slot>
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('dealers.add')">
-                                {{ __('Add Dealer') }}
+                                {{ __('Add Partner') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('dealers.list')">
-                                {{ __('View All Dealers') }}
+                                {{ __('All Partners') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
@@ -63,27 +71,31 @@
                     <!-- Invoices Dropdown -->
                     <x-dropdown align="left" width="48">
                         <x-slot name="trigger">
-                            <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
+                            <button
+                                class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md transition ease-in-out duration-150
                                 {{ request()->routeIs('invoices.*') || request()->routeIs('invoice.*') ? 'text-indigo-700 bg-indigo-50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50' }}">
-                                <span>{{ __('Invoices') }}</span>
-                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                <span>{{ __('Bills') }}</span>
+                                <svg class="ms-1 fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </button>
                         </x-slot>
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('invoices.add')">
-                                {{ __('Create Invoice') }}
+                                {{ __('New Bill') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('invoices.list')">
-                                {{ __('View All Invoices') }}
+                                {{ __('All Bills') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
 
                     <x-nav-link :href="route('summary')" :active="request()->routeIs('summary')">
-                        {{ __('Summary') }}
+                        {{ __('Report') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -92,12 +104,16 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <button
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </div>
                         </button>
@@ -113,7 +129,7 @@
                             @csrf
 
                             <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
+                                onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
@@ -124,10 +140,14 @@
 
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                <button @click="open = ! open"
+                    class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex"
+                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                        <path :class="{ 'hidden': !open, 'inline-flex': open }" class="hidden" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -135,7 +155,7 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
@@ -143,39 +163,39 @@
 
             <!-- Inventory Section -->
             <div class="px-4 pt-3 pb-1">
-                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Inventory</div>
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Items</div>
             </div>
             <x-responsive-nav-link :href="route('stocks.add')" :active="request()->routeIs('stocks.add') || request()->routeIs('stocks.edit')">
-                {{ __('Add Stock') }}
+                {{ __('Add Item') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('stocks.list')" :active="request()->routeIs('stocks.list')">
-                {{ __('View All Stocks') }}
+                {{ __('All Items') }}
             </x-responsive-nav-link>
 
             <!-- Dealers Section -->
             <div class="px-4 pt-3 pb-1">
-                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Dealers</div>
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Partners</div>
             </div>
             <x-responsive-nav-link :href="route('dealers.add')" :active="request()->routeIs('dealers.add') || request()->routeIs('dealers.edit')">
-                {{ __('Add Dealer') }}
+                {{ __('Add Partner') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dealers.list')" :active="request()->routeIs('dealers.list')">
-                {{ __('View All Dealers') }}
+                {{ __('All Partners') }}
             </x-responsive-nav-link>
 
             <!-- Invoices Section -->
             <div class="px-4 pt-3 pb-1">
-                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Invoices</div>
+                <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Bills</div>
             </div>
             <x-responsive-nav-link :href="route('invoices.add')" :active="request()->routeIs('invoices.add') || request()->routeIs('invoices.edit')">
-                {{ __('Create Invoice') }}
+                {{ __('New Bill') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('invoices.list')" :active="request()->routeIs('invoices.list')">
-                {{ __('View All Invoices') }}
+                {{ __('All Bills') }}
             </x-responsive-nav-link>
 
             <x-responsive-nav-link :href="route('summary')" :active="request()->routeIs('summary')">
-                {{ __('Summary') }}
+                {{ __('Report') }}
             </x-responsive-nav-link>
         </div>
 
@@ -196,7 +216,7 @@
                     @csrf
 
                     <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
+                        onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>

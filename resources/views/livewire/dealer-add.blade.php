@@ -2,14 +2,14 @@
     <div class="flex items-center justify-between">
         <div>
             <h1 class="text-2xl font-bold text-zinc-900 tracking-tight dark:text-white">
-                {{ $editingId ? __('Update Entity') : __('Register New Entity') }}
+                {{ $editingId ? __('Change Partner info') : __('Add a new Partner') }}
             </h1>
-            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Configure logistical partner details for the
-                strategic directory.</p>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">Add the name, phone and address for your partner.
+            </p>
         </div>
         <a href="{{ route('dealers.list') }}" class="saas-btn-secondary gap-2">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            Back to Directory
+            Back to list
         </a>
     </div>
 
@@ -26,7 +26,7 @@
 
                 <form wire:submit.prevent="save" class="space-y-6">
                     <div class="space-y-1.5">
-                        <label class="text-detail">Full Registered Name</label>
+                        <label class="text-detail">Name</label>
                         <input wire:model="name" type="text" placeholder="e.g. Nexus Logistics Hub"
                             class="saas-input">
                         @error('name')
@@ -35,7 +35,7 @@
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="text-detail">Communication Protocol (Phone/Mail)</label>
+                        <label class="text-detail">Phone or Email</label>
                         <div class="relative">
                             <i data-lucide="phone"
                                 class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400"></i>
@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="text-detail">Operational Address</label>
+                        <label class="text-detail">Address</label>
                         <textarea wire:model="address" rows="4" placeholder="Primary dispatch center or HQ location..."
                             class="saas-input resize-none"></textarea>
                         @error('address')
@@ -59,11 +59,11 @@
                     <div class="pt-4 flex flex-col gap-2">
                         <button type="submit" class="saas-btn-primary w-full gap-2 py-4">
                             <i data-lucide="{{ $editingId ? 'save' : 'user-plus' }}" class="w-4 h-4"></i>
-                            {{ $editingId ? __('Commit Updates') : __('Authorize Registration') }}
+                            {{ $editingId ? __('Save Changes') : __('Add Partner') }}
                         </button>
                         @if ($editingId)
                             <button type="button" wire:click="resetForm" class="saas-btn-secondary w-full">
-                                {{ __('Discard Edits') }}
+                                {{ __('Cancel') }}
                             </button>
                         @endif
                     </div>
@@ -72,6 +72,3 @@
         </div>
     </div>
 </div>
-
-
-

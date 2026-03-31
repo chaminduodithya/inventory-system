@@ -1,5 +1,5 @@
 <div class="space-y-8 animate-in-fade pb-12">
-    <!-- Header: Operational Intelligence -->
+    <!-- Header: Item info -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
             <div class="flex items-center gap-3 mb-2">
@@ -14,19 +14,19 @@
                 <h1 class="text-3xl font-bold text-zinc-900 dark:text-white tracking-tighter">{{ $stock->name }}</h1>
             </div>
             <p class="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-widest ml-12">
-                SKU IDENTIFIER: {{ str_pad($stock->id, 6, '0', STR_PAD_LEFT) }} | UNIT: {{ $stock->unit ?: 'UNITS' }}
+                ITEM ID: {{ str_pad($stock->id, 6, '0', STR_PAD_LEFT) }} | UNIT: {{ $stock->unit ?: 'UNITS' }}
             </p>
         </div>
 
         <div
             class="flex items-center gap-4 bg-zinc-900 px-6 py-3 rounded border border-zinc-800 shadow-xl ml-12 lg:ml-0">
             <div class="text-right border-r border-zinc-800 pr-4">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Live Inventory</p>
+                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">In Stock</p>
                 <p class="text-2xl font-bold font-mono text-white tracking-tighter">
                     {{ number_format($stock->quantity, 2) }}</p>
             </div>
             <div class="text-right">
-                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Net Valuation</p>
+                <p class="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">Total Value</p>
                 <p class="text-lg font-bold font-mono text-emerald-400 tracking-tighter">Rs.
                     {{ number_format($stock->quantity * $stock->price, 2) }}</p>
             </div>
@@ -37,10 +37,7 @@
         <!-- Control Interface -->
         <div class="lg:col-span-1 space-y-6">
             <div class="saas-card p-6">
-                <div class="flex items-center gap-2 mb-6">
-                    <div class="w-1.5 h-4 bg-brand-500 rounded-full"></div>
-                    <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500">Registry Adjustment</h2>
-                </div>
+                <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500">Update Stock</h2>
 
                 @if (session()->has('message'))
                     <div
@@ -52,21 +49,21 @@
 
                 <form wire:submit.prevent="updateStock" class="space-y-5">
                     <div class="space-y-1.5">
-                        <label class="text-detail">Transaction Type</label>
+                        <label class="text-detail">Add or Remove</label>
                         <div class="grid grid-cols-2 gap-2">
                             <button type="button" wire:click="$set('update_type', 'addition')"
                                 class="py-2.5 px-3 rounded text-[11px] font-bold uppercase transition-all flex items-center justify-center gap-2 border {{ $update_type === 'addition' ? 'bg-zinc-900 border-zinc-900 text-white dark:bg-brand-600 dark:border-brand-500 shadow-md' : 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-800 cursor-pointer' }}">
-                                <i data-lucide="plus-circle" class="w-4 h-4"></i> Addition
+                                <i data-lucide="plus-circle" class="w-4 h-4"></i> Added
                             </button>
                             <button type="button" wire:click="$set('update_type', 'subtraction')"
                                 class="py-2.5 px-3 rounded text-[11px] font-bold uppercase transition-all flex items-center justify-center gap-2 border {{ $update_type === 'subtraction' ? 'bg-rose-600 border-rose-500 text-white shadow-md' : 'bg-white border-zinc-200 text-zinc-500 hover:bg-zinc-50 dark:bg-zinc-900 dark:border-zinc-800 cursor-pointer' }}">
-                                <i data-lucide="minus-circle" class="w-4 h-4"></i> Subtraction
+                                <i data-lucide="minus-circle" class="w-4 h-4"></i> Removed
                             </button>
                         </div>
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="text-detail">Delta Magnitude (Quantity)</label>
+                        <label class="text-detail">How many items</label>
                         <input wire:model="quantity_change" type="number" step="0.01"
                             class="saas-input font-mono text-lg" placeholder="0.00">
                         @error('quantity_change')
@@ -75,23 +72,20 @@
                     </div>
 
                     <div class="space-y-1.5">
-                        <label class="text-detail">Log Context / Reason</label>
-                        <textarea wire:model="reason" rows="2" placeholder="e.g. System Audit, Re-stocking..."
+                        <label class="text-detail">Reason / Why?</label>
+                        <textarea wire:model="reason" rows="2" placeholder="e.g. Buying more, Selling, Fixing error..."
                             class="saas-input resize-none text-xs"></textarea>
                     </div>
 
-                    <button type="submit"
-                        class="saas-btn-primary w-full py-4 uppercase text-[11px] tracking-widest gap-2">
-                        <i data-lucide="shield-check" class="w-4 h-4"></i> Authorize Log Entry
-                    </button>
+                    <i data-lucide="shield-check" class="w-4 h-4"></i> Save changes
                 </form>
             </div>
 
             <div class="saas-card p-6 bg-zinc-50 dark:bg-zinc-900/30">
-                <h3 class="text-[10px] font-bold uppercase text-zinc-400 mb-4 tracking-widest">Pricing Metadata</h3>
+                <h3 class="text-[10px] font-bold uppercase text-zinc-400 mb-4 tracking-widest">Price Info</h3>
                 <div
                     class="flex justify-between items-center bg-white dark:bg-zinc-900 p-3 rounded border border-zinc-100 dark:border-zinc-800 shadow-sm">
-                    <span class="text-xs text-zinc-500">Unit Valuation</span>
+                    <span class="text-xs text-zinc-500">Price per unit</span>
                     <span class="font-bold font-mono text-zinc-900 dark:text-zinc-100">Rs.
                         {{ number_format($stock->price, 2) }}</span>
                 </div>
@@ -105,7 +99,7 @@
                     class="p-5 border-b border-zinc-50 dark:border-zinc-800/50 bg-zinc-50/30 dark:bg-zinc-900/30 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         <div class="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></div>
-                        <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500">Historical Audit Trail
+                        <h2 class="text-xs font-bold uppercase tracking-widest text-zinc-500">Stock history
                         </h2>
                     </div>
                 </div>
@@ -114,10 +108,10 @@
                     <table class="data-grid w-full">
                         <thead>
                             <tr class="bg-zinc-50/50 dark:bg-zinc-900/50">
-                                <th class="data-grid-header">Timeline</th>
-                                <th class="data-grid-header">Entity / Action</th>
-                                <th class="data-grid-header text-right">Delta</th>
-                                <th class="data-grid-header text-right">Registry Baseline</th>
+                                <th class="data-grid-header">Date & Time</th>
+                                <th class="data-grid-header">Who / Why</th>
+                                <th class="data-grid-header text-right">Change</th>
+                                <th class="data-grid-header text-right">Before -> After</th>
                                 <th class="data-grid-header">Status</th>
                             </tr>
                         </thead>
@@ -148,13 +142,13 @@
                                     <td class="data-grid-cell">
                                         @if ($log->type === 'addition')
                                             <span
-                                                class="text-[9px] font-bold text-emerald-500 bg-emerald-500/5 px-1.5 py-0.5 rounded border border-emerald-500/10">INGRESS</span>
+                                                class="text-[9px] font-bold text-emerald-500 bg-emerald-500/5 px-1.5 py-0.5 rounded border border-emerald-500/10">ADDED</span>
                                         @elseif($log->type === 'invoice_sale')
                                             <span
-                                                class="text-[9px] font-bold text-brand-500 bg-brand-500/5 px-1.5 py-0.5 rounded border border-brand-500/10">DISPATCH</span>
+                                                class="text-[9px] font-bold text-brand-500 bg-brand-500/5 px-1.5 py-0.5 rounded border border-brand-500/10">SOLD</span>
                                         @else
                                             <span
-                                                class="text-[9px] font-bold text-rose-500 bg-rose-500/5 px-1.5 py-0.5 rounded border border-rose-500/10">ADJUST</span>
+                                                class="text-[9px] font-bold text-rose-500 bg-rose-500/5 px-1.5 py-0.5 rounded border border-rose-500/10">FIXED</span>
                                         @endif
                                     </td>
                                 </tr>
@@ -167,9 +161,9 @@
                                                 <i data-lucide="history" class="w-8 h-8"></i>
                                             </div>
                                             <div class="space-y-1">
-                                                <h3 class="font-bold text-zinc-400 text-sm">Audit Trail Nil</h3>
-                                                <p class="text-[11px] text-zinc-500">No logistical events have been
-                                                    recorded for this SKU.</p>
+                                                <h3 class="font-bold text-zinc-400 text-sm">No history yet</h3>
+                                                <p class="text-[11px] text-zinc-500">No stock changes have been
+                                                    recorded for this item yet.</p>
                                             </div>
                                         </div>
                                     </td>
@@ -185,6 +179,5 @@
         </div>
     </div>
 
-    
-</div>
 
+</div>
